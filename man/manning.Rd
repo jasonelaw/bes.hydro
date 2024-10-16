@@ -2,11 +2,7 @@
 % Please edit documentation in R/manning.R
 \name{manning}
 \alias{manning}
-\alias{manning_velocity}
 \title{Calculate velocity estimated by Manning's equation}
-\usage{
-manning_velocity(pipe, depth, n, unit = c("ft", "m"))
-}
 \arguments{
 \item{pipe}{a pipe geometry object}
 
@@ -21,8 +17,3 @@ Calculate flow or velocity using velocity estimated by Manning's equation and pi
 geometry. If missing, will use the default roughness defined for the pipe,
 if available.
 }
-\section{Functions}{
-\itemize{
-\item \code{manning_velocity()}: calculate velocity
-
-}}

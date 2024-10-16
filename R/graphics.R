@@ -1,3 +1,4 @@
+#' @export
 plot_flow <- function(data, timestamp, depth, velocity, flow, rain, rain.type) {
   pl1 <- data |> plot_parameter({{ timestamp }}, {{ depth }})
   pl2 <- data |> plot_parameter({{ timestamp }}, {{ velocity }})
@@ -12,22 +13,46 @@ plot_parameter <- function(x, time, parameter) {
   ret
 }
 
+#' @export
 plot_rain <- function(x, time, rain, type = c("bar", "cumulative")) {
   type <- match.arg(type)
   ret <- ggplot2::ggplot(data = x)
   geom <- switch(type,
-                 bar = ggplot2::geom_col(mapping = aes({{ time }}, {{ rain }})),
-                 cumulative = ggplot2::geom_line(aes({{ time }}, cumsum({{ rain }})))
+    bar = ggplot2::geom_col(mapping = aes({{ time }}, {{ rain }})),
+    cumulative = ggplot2::geom_line(aes({{ time }}, cumsum({{ rain }})))
   )
   ret <- ret + geom
   ret
 }
 
+#' @export
 plot_dv <- function(data, depth, velocity, ...) {
   ret <- ggplot2::ggplot(data, aes(depth, velocity)) +
     ggplot2::geom_point(...) +
     units::scale_x_units(unit = "ft")
   ret
+}
+
+#' @export
+label_n <- function(pipe, n = 10, adjust.depth = 0, ...) {
+  geom_label(
+    aes(
+      label = format(manning_n(pipe, after_stat(x) - adjust.depth, after_stat(y)), digits = 2)
+    ),
+    stat = "smooth",
+    method = qgam::qgam,
+    formula = y ~ s(x) ,
+    n = n,
+    method.args = list(qu = 0.5),
+    ...
+  )
+}
+
+#' @export
+geom_manning_velocity <- function(pipe, n, adjust.depth = 0, ...) {
+  geom_function(
+    fun = ~ manning_velocity(pipe, after_scale(.) - adjust.depth, n = n),
+    color = "red")
 }
 
 #' #' @format NULL

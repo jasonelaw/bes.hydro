@@ -1,0 +1,61 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# bes.hydro
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of `bes.hydro` is to provide functionality for open channel open channel (e.g., a sewer or stormwaterpipe) flow data. Pipe geometry calculations are included for calculating flow from depth and velocity, along with functions for calculating velocity and flow using the Manning equation. 
+
+## Installation
+
+You can install the development version of bes.hydro from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("jasonelaw/bes.hydro")
+```
+
+## Example
+
+Here is an example using included flow data; the depth, velocity, and flow columns are have had their measurement units set using the (units)[https://r-quantities.github.io/units/index.html] package. We can create a `CircularPipe` object to facilitate pipe calculations and give it a default roughness coefficient from an included list of coefficient values. The object can also be used for geometry calculations:
+
+```{r example-data}
+library(tidyverse)
+library(bes.hydro)
+library(units)
+data(flow)
+print(flow)
+manning_coefficient$`Closed Conduit`$Brickwork$`Lined with cement mortar`
+ABZ075 <- CircularPipe$new(
+  diameter = 66/12, 
+  slope = 0.00826,
+  n = manning_coefficient$`Closed Conduit`$Brickwork$`Lined with cement mortar`[2],
+  unit = "ft"
+)
+ABZ075$wetted_area(1.1)
+ABZ075$wetted_perimeter(1.1)
+```
+
+We can also plot a depth vs velocity plot and add a Manning curve:
+
+```{r plot, echo = FALSE}
+flow |>
+  plot_dv(depth, velocity, shape = 21) + 
+  geom_manning_velocity(ach129, color = "red")
+```
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

@@ -96,11 +96,15 @@ ABZ075$wetted_perimeter(1.1)
 
 We can also plot a depth vs velocity plot and add a Manning curve:
 
-    #> Warning: Computation failed in `stat_function()`.
-    #> Caused by error:
-    #> ! object 'ach129' not found
-
 <img src="man/figures/README-plot-1.png" width="100%" />
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+We can see that this curve with the default roughness that we provided
+for the pipe doesn’t fit so well for depths over . We can label the best
+fit roughness coefficient across the observed depths:
+
+    #> `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+<img src="man/figures/README-plot-with-label-1.png" width="100%" />
+
+Based on this, we can adjust the coefficient:
+<img src="man/figures/README-better-plot-1.png" width="100%" />

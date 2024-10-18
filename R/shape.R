@@ -8,15 +8,18 @@ Circle <- R6::R6Class("Circle",
       self$diameter <- radius * 2
     },
     segment_central_angle = function(height) {
+      is.na(height) <- (height < 0) | (height > self$diameter)
       ret <- 2 * acos(1 - (2 * as.numeric(height / self$diameter)))
       return(ret)
     },
     segment_area = function(height) {
+      is.na(height) <- (height < 0) | (height > self$diameter)
       theta <- self$segment_central_angle(height)
       area <- (self$diameter^2 / 8) * (theta - sin(theta))
       return(area)
     },
     segment_arc_length = function(height) {
+      is.na(height) <- (height < 0) | (height > self$diameter)
       self$segment_central_angle(height) * self$diameter / 2
     },
     coordinates = function() {

@@ -4,7 +4,7 @@
 #' A `CircularPipe` is created by a diameter and slope. Units passed to the
 #' `depth` argument of methods must match the pipe units
 #'
-#' @param depth depth of flow
+#' @param depth depth of flow, values greater than the diameter or less than 0 will result in NA being returned
 #' @export
 CircularPipe <- R6::R6Class("CircularPipe",
   inherit = Circle,
@@ -43,7 +43,7 @@ CircularPipe <- R6::R6Class("CircularPipe",
     print = function() {
       cat(glue::glue(
         "Circular Pipe: ",
-        "diameter = {format(self$diameter)}, ",
+        "diameter = {format(self$diameter)} [{self$unit}], ",
         "slope = {self$slope}, ",
         "Manning coef = {self$n}"
       ))
@@ -81,9 +81,9 @@ CircularPipe <- R6::R6Class("CircularPipe",
     },
 
     convert_to_si = function() {
-      diameter <- set_units(self$diameter, self$unit, mode = "char")
+      diameter <- units::set_units(self$diameter, self$unit, mode = "char")
       CircularPipe$new(
-        diameter = set_units(diameter, "m", mode = "char"),
+        diameter = units::set_units(diameter, "m", mode = "char"),
         slope = self$slope,
         n = self$n,
         unit = "m"

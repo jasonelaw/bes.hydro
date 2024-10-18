@@ -4,7 +4,8 @@ plot_flow <- function(data, timestamp, depth, velocity, flow, rain, rain.type) {
   pl2 <- data |> plot_parameter({{ timestamp }}, {{ velocity }})
   pl3 <- data |> plot_parameter({{ timestamp }}, {{ flow }})
   pl4 <- data |> plot_rain({{ timestamp }}, {{ rain }}, type = rain.type)
-  patchwork::wrap_plots(pl1, pl2, pl3, pl4, layout, nrow = 5, axes = "collect_x")
+  layout <- patchwork::plot_layout(nrow = 5, axes = "collect")
+  patchwork::wrap_plots(pl1, pl2, pl3, pl4) + layout
 }
 
 plot_parameter <- function(x, time, parameter) {
@@ -40,19 +41,20 @@ label_n <- function(pipe, n = 10, adjust.depth = 0, ...) {
       label = format(manning_n(pipe, after_stat(x) - adjust.depth, after_stat(y)), digits = 2)
     ),
     stat = "smooth",
-    method = qgam::qgam,
-    formula = y ~ s(x) ,
     n = n,
-    method.args = list(qu = 0.5),
     ...
   )
 }
 
 #' @export
 geom_manning_velocity <- function(pipe, n, adjust.depth = 0, ...) {
+  if(missing(n)) {
+    n <- pipe$n
+  }
   geom_function(
     fun = ~ manning_velocity(pipe, after_scale(.) - adjust.depth, n = n),
-    color = "red")
+    ...
+  )
 }
 
 #' #' @format NULL

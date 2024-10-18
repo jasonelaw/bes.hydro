@@ -55,7 +55,20 @@ We can also plot a depth vs velocity plot and add a Manning curve:
 ```{r plot, echo = FALSE}
 flow |>
   plot_dv(depth, velocity, shape = 21) + 
-  geom_manning_velocity(ach129, color = "red")
+  geom_manning_velocity(ABZ075, col = "blue")
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+We can see that this curve with the default roughness that we provided for the pipe doesn't fit so well for depths over . We can label the best fit roughness coefficient across the observed depths:
+
+```{r plot-with-label, echo = FALSE}
+flow |>
+  plot_dv(depth, velocity, shape = 21) + 
+  label_n(ABZ075)
+```
+
+Based on this, we can adjust the coefficient:
+```{r better-plot, echo = FALSE}
+flow |>
+  plot_dv(depth, velocity, shape = 21) + 
+  geom_manning_velocity(ABZ075, n = 0.014, col = "#dd4124")
+```
